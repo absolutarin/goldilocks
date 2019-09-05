@@ -48,7 +48,8 @@ func TestRun(t *testing.T) {
 	}
 	// Not even sure I need these things, but it kept erroring out because
 	// it couldn't find corev1 pkg, and since it adds them automatically, this seemed
-	// like a thing to do
+	// like a thing to do..it makes the test crazy long- not cute
+	// I might need them because I think I need Summary and Summary needs Deployment Summary etc...
 	type fakeContainerSummary struct {
 		LowerBound     corev1.ResourceList `json:"fake"`
 		UpperBound     corev1.ResourceList `json:"fake"`
@@ -59,7 +60,7 @@ func TestRun(t *testing.T) {
 		ContainerName  string              `json:"fake"`
 	}
 
-	type fakeDeploymentSummary struct {
+	type DeploymentSummary struct {
 		Containers     []fakeContainerSummary `json:"fake"`
 		DeploymentName string                 `json:"fake"`
 		Namespace      string                 `json:"fake"`
@@ -67,14 +68,16 @@ func TestRun(t *testing.T) {
 
 	// Summary struct is for storing a summary of recommendation data.
 	type Summary struct {
-		Deployments []fakeDeploymentSummary `json:"fake"`
-		Namespaces  []string                `json:"fake"`
+		Deployments []deploymentSummary `json:"fake"`
+		Namespaces  []string            `json:"fake"`
 	}
 
+	// making sure this doesn't error out?
 	_, errOk := kubeClientVPA.Client.AutoscalingV1beta2().VerticalPodAutoscalers("").List(fakeVpaListOptions)
 	assert.NoError(t, errOk)
 	// what even am I testing for? just that the return is in fact
 	// type summary?
+	// i think this is making an instance of Summary
 	var summary Summary
 
 	got, err := Run(fakeVpaLabels, "true")
