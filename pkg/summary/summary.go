@@ -50,10 +50,15 @@ type Summary struct {
 }
 
 // Run creates a summary of the vpa info for all namespaces.
-func Run(vpaLabels map[string]string, excludeContainers string) (Summary, error) {
+// pass in kubeclient as kubeClientVPA *kube.VPAClientInstance
+// Find all the occurences of Run func and modify them reflect this
+// (does kubeClient then need to be instantiated in each of those places?)
+// called on line 41 summary.go pkg in here
+// called on line 165 in dashboard.go
+func Run(kubeClientVPA *kube.VPAClientInstance, vpaLabels map[string]string, excludeContainers string) (Summary, error) {
 	klog.V(3).Infof("Looking for VPAs with labels: %v", vpaLabels)
 
-	kubeClientVPA := kube.GetVPAInstance()
+	// kubeClientVPA := kube.GetVPAInstance()
 
 	vpaListOptions := metav1.ListOptions{
 		LabelSelector: labels.Set(vpaLabels).String(),
