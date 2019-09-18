@@ -53,7 +53,7 @@ type Summary struct {
 // pass in kubeclient as kubeClientVPA *kube.VPAClientInstance
 // Find all the occurences of Run func and modify them reflect this
 // (does kubeClient then need to be instantiated in each of those places?)
-// called on line 41 summary.go pkg in here
+// called on line 41 cmd/summary.go
 // called on line 165 in dashboard.go
 func Run(kubeClientVPA *kube.VPAClientInstance, vpaLabels map[string]string, excludeContainers string) (Summary, error) {
 	klog.V(3).Infof("Looking for VPAs with labels: %v", vpaLabels)

@@ -18,29 +18,30 @@ import (
 	"testing"
 
 	"github.com/fairwindsops/goldilocks/pkg/kube"
+	"github.com/fairwindsops/goldilocks/pkg/utils"
 	"github.com/stretchr/testify/assert"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 )
 
 func TestRun(t *testing.T) {
-	fakeVpaLabels := map[string]string{
-		"kind": "Deployment",
-	}
 	// this always has to be present when the run func is called now
 	kubeClientVPA := kube.GetMockVPAClient()
 
 	fakeVpaListOptions := metav1.ListOptions{
-		LabelSelector: labels.Set(fakeVpaLabels).String(),
+		LabelSelector: labels.Set(utils.VpaLabels).String(),
 	}
-	// do I actually need this?
+
 	_, errOk := kubeClientVPA.Client.AutoscalingV1beta2().VerticalPodAutoscalers("").List(fakeVpaListOptions)
 	assert.NoError(t, errOk)
 
 	var summary Summary
 
-	got, err := Run(kubeClientVPA, fakeVpaLabels, "true")
+	got, err := Run(kubeClientVPA, utils.VpaLabels, "true")
 	assert.NoError(t, err)
 
 	assert.EqualValues(t, got, summary)
 }
+
+// called on line 41 cmd/summary.go
+// called on line 165 in dashboard.go
